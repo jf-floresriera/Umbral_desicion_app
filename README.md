@@ -18,7 +18,7 @@
 
 ---
 
-## 🎯 La idea en una animación
+##  La idea en una animación
 
 Una red con salida logística entrega una probabilidad, y casi siempre se corta en **0,5**.
 Ese umbral ignora la prevalencia. El umbral propuesto
@@ -34,14 +34,14 @@ es el punto donde se cruzan el índice de Youden **clásico** (la red como instr
 <br><sub>Al cambiar la prevalencia de uso <i>P</i>, el cruce de C<sub>J</sub> y B<sub>J</sub> —y con él c*— se desplaza. La línea punteada es el umbral por defecto 0,5.</sub>
 </div>
 
-## ⚡ Cinco métodos para resolver la ecuación del umbral
+##  Cinco métodos para resolver la ecuación del umbral
 
 <div align="center">
 <img src="assets/convergencia.gif" width="85%" alt="convergencia de los métodos"/>
 <br><sub>Error en cada evaluación: Newton–Raphson (cuadrático) y Brent (robusto) son los métodos retenidos.</sub>
 </div>
 
-## 🧭 Flujo de trabajo
+##  Flujo de trabajo
 
 ```mermaid
 flowchart LR
@@ -54,7 +54,7 @@ flowchart LR
     E --> H[✅ Sitio sano / enfermo]
 ```
 
-## 🚀 Uso rápido
+## Uso rápido
 
 <details open>
 <summary><b>🐍 Python + PyTorch + Shiny</b></summary>
@@ -103,7 +103,7 @@ Si quieres usarla:
 Con `"auto"`, si no hay GPU se usa la CPU sin error.
 </details>
 
-## 🗂️ Contenido
+##  Contenido
 
 | Ruta | Qué hace |
 | --- | --- |
@@ -118,7 +118,7 @@ Con `"auto"`, si no hay GPU se usa la CPU sin error.
 | `app_r/app.R` | App R Shiny en un solo archivo (bslib, plotly y torch para R) |
 | `tools/generar_animaciones.py` | Regenera los GIF de este README |
 
-## 🖥️ La app
+##  La app
 
 | Pestaña | Contenido |
 | --- | --- |
@@ -127,12 +127,12 @@ Con `"auto"`, si no hay GPU se usa la CPU sin error.
 | **3 · Datos y red** | Entrena la red con datos sintéticos o con tu CSV local; CV estratificada vs. agrupada |
 | **4 · Cambio de prevalencia** | c*(P) para varios valores de κ |
 
-## 🔒 Datos
+##  Datos
 
 Los datos de campo **no se publican**: `data/` y todos los `.csv` están excluidos por
 `.gitignore`. El CSV se carga solo en la app que corre en tu computador. Ver `data/README.md`.
 
-## 👤 Autor
+##  Autor
 
 **Jesús Enrique Flores Riera** · [ORCID 0000-0002-8167-4212](https://orcid.org/0000-0002-8167-4212)
 Universidad Nacional de Colombia
