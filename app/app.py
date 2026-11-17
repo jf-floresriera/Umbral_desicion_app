@@ -91,6 +91,8 @@ pestaña_red = ui.nav_panel(
                                    selected="ambas"),
             ui.input_numeric("epocas", "Épocas máximas", 500, min=10, max=5000),
             ui.input_checkbox("pesar", "Ponderar positivos en la pérdida (pos_weight)", False),
+            ui.input_select("disp", "Dispositivo", {"cpu": "CPU", "auto": "GPU NVIDIA si está disponible"},
+                            selected="cpu"),
             ui.input_action_button("entrenar", "Entrenar y evaluar", class_="btn-primary"),
             width=320,
         ),
@@ -202,7 +204,8 @@ def server(input, output, session):
             grupos = None if input.col_g() in ("", "(ninguna)") else d[input.col_g()].to_numpy()
         P = y.mean()
         pw = (1 - P) / P if input.pesar() else None
-        fabrica = lambda s: RedTorch(epocas=input.epocas(), semilla=s, peso_positivos=pw)
+        fabrica = lambda s: RedTorch(epocas=input.epocas(), semilla=s, peso_positivos=pw,
+                                     dispositivo=input.disp())
         esquemas = {"estr": ["Estratificada"], "agr": ["Agrupada"], "ambas": ["Estratificada", "Agrupada"]}[input.tipo_cv()]
         if "Agrupada" in esquemas and grupos is None:
             esquemas = ["Estratificada"]

@@ -239,12 +239,14 @@ particiones <- function(y, grupos = NULL, k = 5, semilla = 20260212) {
 # Usa el mismo motor C++ (libtorch) que PyTorch. Funciona solo con CPU.
 entrenar_red <- function(X, y, h1 = 10, h2 = 5, lr = 0.05, momento = 0.9, lam = 1e-4,
                          epocas = 500, lote = 200, tol = 1e-4, paciencia = 10,
-                         semilla = 20260212, peso_pos = NULL) {
+                         semilla = 20260212, peso_pos = NULL, dispositivo = "cpu") {
+  # dispositivo: "cpu" (por defecto) o "auto" (GPU NVIDIA si torch la detecta)
+  dev <- if (dispositivo == "auto" && torch::cuda_is_available()) "cuda" else "cpu"
   torch::torch_manual_seed(semilla); set.seed(semilla)
   media <- colMeans(X); de <- apply(X, 2, sd) + 1e-12
   Xs <- sweep(sweep(X, 2, media), 2, de, "/")
-  xt <- torch::torch_tensor(Xs, dtype = torch::torch_float())
-  yt <- torch::torch_tensor(as.numeric(y), dtype = torch::torch_float())
+  xt <- torch::torch_tensor(Xs, dtype = torch::torch_float(), device = dev)
+  yt <- torch::torch_tensor(as.numeric(y), dtype = torch::torch_float(), device = dev)
   n <- nrow(X)
   Red <- torch::nn_module(
     initialize = function(d) {
@@ -257,13 +259,13 @@ entrenar_red <- function(X, y, h1 = 10, h2 = 5, lr = 0.05, momento = 0.9, lam = 
       x <- torch::nnf_relu(self$l1(x)); x <- torch::nnf_relu(self$l2(x))
       torch::torch_squeeze(self$l3(x), 2)
     })
-  red <- Red(ncol(X))
+  red <- Red(ncol(X)); red$to(device = dev)
   pars <- red$parameters
   es_peso <- grepl("weight", names(pars))
   opt <- torch::optim_sgd(list(list(params = unname(pars[es_peso]), weight_decay = lam / n),
                                list(params = unname(pars[!es_peso]), weight_decay = 0)),
                           lr = lr, momentum = momento, nesterov = TRUE)
-  pw <- if (is.null(peso_pos)) NULL else torch::torch_tensor(peso_pos)
+  pw <- if (is.null(peso_pos)) NULL else torch::torch_tensor(peso_pos, device = dev)
   b <- min(lote, n); mejor <- Inf; sin_mejora <- 0
   for (ep in seq_len(epocas)) {
     orden <- sample(n); total <- 0
@@ -278,15 +280,15 @@ entrenar_red <- function(X, y, h1 = 10, h2 = 5, lr = 0.05, momento = 0.9, lam = 
     if (total > mejor - tol) { sin_mejora <- sin_mejora + 1; if (sin_mejora >= paciencia) break } else sin_mejora <- 0
     mejor <- min(mejor, total)
   }
-  list(red = red, media = media, de = de)
+  list(red = red, media = media, de = de, dev = dev)
 }
 
 predecir_red <- function(modelo, X) {
   Xs <- sweep(sweep(X, 2, modelo$media), 2, modelo$de, "/")
   torch::with_no_grad({
-    eta <- modelo$red(torch::torch_tensor(Xs, dtype = torch::torch_float()))
+    eta <- modelo$red(torch::torch_tensor(Xs, dtype = torch::torch_float(), device = modelo$dev))
   })
-  1 / (1 + exp(-as.numeric(torch::as_array(eta))))
+  1 / (1 + exp(-as.numeric(torch::as_array(eta$cpu()))))
 }
 
 predicciones_cv <- function(X, y, grupos = NULL, k = 5, semilla = 20260212, ...) {

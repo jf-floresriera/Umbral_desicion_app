@@ -94,6 +94,7 @@ ui <- page_navbar(
                      selected = "ambas"),
         numericInput("epocas", "Épocas máximas", 500, min = 10, max = 5000),
         checkboxInput("pesar", "Ponderar positivos en la pérdida", FALSE),
+        selectInput("disp", "Dispositivo", c("CPU" = "cpu", "GPU NVIDIA si está disponible" = "auto")),
         input_task_button("entrenar", "Entrenar y evaluar", icon = bs_icon("play-fill"))),
       uiOutput("aviso_torch"),
       uiOutput("cajas_red"),
@@ -186,7 +187,8 @@ server <- function(input, output, session) {
     withProgress(message = "Entrenando la red", value = 0, {
       for (nm in esq) {
         incProgress(1 / length(esq), detail = paste("CV", tolower(nm)))
-        p <- predicciones_cv(X, y, if (nm == "Agrupada") grupos else NULL, epocas = input$epocas, peso_pos = pw)
+        p <- predicciones_cv(X, y, if (nm == "Agrupada") grupos else NULL, epocas = input$epocas, peso_pos = pw,
+                              dispositivo = input$disp)
         out[[nm]] <- list(p = p, emp = umbral_desde_puntajes(y, p))
       }
     })

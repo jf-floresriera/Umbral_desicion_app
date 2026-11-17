@@ -88,6 +88,21 @@ shiny::runApp("app_r")
 ```
 </details>
 
+<details>
+<summary><b>🟩 ¿Tienes GPU NVIDIA? (opcional)</b></summary>
+
+Por defecto todo corre en **CPU**: la red tiene 121 parámetros y entrena en segundos,
+así que la GPU no es necesaria (con redes tan pequeñas incluso puede ser más lenta).
+Si quieres usarla:
+
+| | Instalación | Uso |
+| --- | --- | --- |
+| **Python** | `pip install torch` (versión CUDA, varios GB) con los controladores NVIDIA instalados | En la app: *Dispositivo → GPU NVIDIA si está disponible*; en código: `RedTorch(dispositivo="auto")` o `"cuda"` |
+| **R** | `torch::install_torch()` en un equipo con CUDA | En la app: *Dispositivo → GPU*; en código: `entrenar_red(..., dispositivo = "auto")` |
+
+Con `"auto"`, si no hay GPU se usa la CPU sin error.
+</details>
+
 ## 🗂️ Contenido
 
 | Ruta | Qué hace |
