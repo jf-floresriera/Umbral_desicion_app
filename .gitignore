@@ -1,0 +1,20 @@
+# Datos de campo: NO se publican (artículo en preparación)
+data/*
+!data/README.md
+*.csv
+*.xlsx
+*.parquet
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Resultados locales
+resultados/
+*.pt
+.ipynb_checkpoints/
+.DS_Store
