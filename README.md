@@ -60,20 +60,30 @@ flowchart LR
 <summary><b>🐍 Python + PyTorch + Shiny</b></summary>
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
+sudo apt install python3-venv python3-full        # solo la primera vez (Ubuntu/Debian)
+python3 -m venv .venv
+source .venv/bin/activate                          # desde aquí, pip instala solo dentro de .venv
 # PyTorch SOLO para CPU (≈200 MB, sin controladores de video ni tarjeta gráfica)
 pip install torch --index-url https://download.pytorch.org/whl/cpu
 pip install -r requirements.txt
 pytest -q                       # reproduce las tablas 2, 3, 5 y 6 del artículo
-shiny run --reload app/app.py   # http://127.0.0.1:8000
+shiny run --reload app/app.py   # abre http://127.0.0.1:8000 en el navegador
 ```
+Cada vez que abras una terminal nueva, activa el entorno con `source .venv/bin/activate`.
 </details>
 
 <details>
 <summary><b>📊 R + Shiny + torch (diseño bslib)</b></summary>
 
+Desde la **terminal** (no dentro de R):
+```bash
+sudo apt install r-base libcurl4-openssl-dev libssl-dev libxml2-dev   # solo la primera vez
+Rscript app_r/instalar.R          # una sola vez; torch se instala en versión CPU
+Rscript -e 'shiny::runApp("app_r", launch.browser = TRUE)'
+```
+O dentro de la consola de R / RStudio, con el repositorio como carpeta de trabajo:
 ```r
-source("app_r/instalar.R")   # una sola vez; torch se instala en versión CPU
+source("app_r/instalar.R")
 shiny::runApp("app_r")
 ```
 </details>
