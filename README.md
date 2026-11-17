@@ -1,51 +1,117 @@
-# Umbral de decisión sensible a la prevalencia (índice de Youden bayesiano)
+<div align="center">
 
-Aplicación y código de apoyo del artículo *«Umbral de decisión sensible a la
-prevalencia para perceptrones multicapa basado en el índice de Youden bayesiano:
-aplicación en sensoramiento remoto»*.
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:2a78d6,50:1baf7a,100:eb6834&height=210&section=header&text=Umbral%20de%20Youden%20bayesiano&fontSize=40&fontColor=ffffff&fontAlignY=36&desc=Umbral%20de%20decisi%C3%B3n%20sensible%20a%20la%20prevalencia%20para%20redes%20neuronales&descSize=16&descAlignY=58&animation=fadeIn" width="100%"/>
 
-El umbral propuesto es
+<a href="#-la-idea-en-una-animación">
+<img src="https://readme-typing-svg.demolab.com?font=Inter&weight=600&size=20&duration=3200&pause=900&color=2A78D6&center=true&vCenter=true&width=760&lines=c*+%3D+argmax+min%7BC_J(c)%2C+B_J(c%3BP)%7D;Falsos+positivos+%3D+falsos+negativos+esperados;Sin+reentrenar+la+red%3A+solo+se+mueve+el+umbral;Python+%2B+PyTorch+%E2%80%A2+R+Shiny+%2B+torch" alt="typing"/>
+</a>
 
-c\* = argmax_c min{ C_J(c), B_J(c; P) },
+<p>
+<img src="https://img.shields.io/badge/Python-3.10%2B-2a78d6?style=for-the-badge&logo=python&logoColor=white"/>
+<img src="https://img.shields.io/badge/PyTorch-CPU-eb6834?style=for-the-badge&logo=pytorch&logoColor=white"/>
+<img src="https://img.shields.io/badge/R-Shiny-1baf7a?style=for-the-badge&logo=r&logoColor=white"/>
+<img src="https://img.shields.io/badge/pruebas-10%2F10-008300?style=for-the-badge&logo=pytest&logoColor=white"/>
+<img src="https://img.shields.io/badge/GPU-no%20necesaria-52514e?style=for-the-badge&logo=nvidia&logoColor=white"/>
+</p>
 
-la única raíz de Q(c) = P: el umbral en que se igualan los falsos positivos y los
-falsos negativos esperados.
+</div>
 
-## Contenido
+---
 
+## 🎯 La idea en una animación
+
+Una red con salida logística entrega una probabilidad, y casi siempre se corta en **0,5**.
+Ese umbral ignora la prevalencia. El umbral propuesto
+
+$$c^{*}=\arg\max_{c}\ \min\{C_J(c),\;B_J(c;P)\}$$
+
+es el punto donde se cruzan el índice de Youden **clásico** (la red como instrumento) y el
+**bayesiano** (lo que aprende quien recibe la predicción). Es la única raíz de $Q(c)=P$:
+**se igualan los falsos positivos y los falsos negativos esperados**.
+
+<div align="center">
+<img src="assets/umbral_prevalencia.gif" width="85%" alt="c* se mueve con la prevalencia"/>
+<br><sub>Al cambiar la prevalencia de uso <i>P</i>, el cruce de C<sub>J</sub> y B<sub>J</sub> —y con él c*— se desplaza. La línea punteada es el umbral por defecto 0,5.</sub>
+</div>
+
+## ⚡ Cinco métodos para resolver la ecuación del umbral
+
+<div align="center">
+<img src="assets/convergencia.gif" width="85%" alt="convergencia de los métodos"/>
+<br><sub>Error en cada evaluación: Newton–Raphson (cuadrático) y Brent (robusto) son los métodos retenidos.</sub>
+</div>
+
+## 🧭 Flujo de trabajo
+
+```mermaid
+flowchart LR
+    A[🛰️ Imágenes de dron<br/>NDVI · EVI · NDRE · GLI] --> C
+    B[🌱 Altura del dosel] --> C
+    C[🧠 Perceptrón 5-10-5-1<br/>PyTorch / torch] --> D[Salida p]
+    D --> E{¿p ≥ c?}
+    F[Prevalencia de uso P] --> G[Ecuación del umbral<br/>Q c = P]
+    G -->|Brent · Newton| E
+    E --> H[✅ Sitio sano / enfermo]
 ```
-src/umbral/
-  metricas.py     Se, Sp, VPP, VPN, C_J, B_J, B_G, F1, MCC; proposición 3
-  binormal.py     modelo logit-binormal desde la matriz de confusión (sección 3.3)
-  raices.py       bisección, Newton–Raphson, secante, Brent e ITP (sección 3.4)
-  umbral.py       c* desde la matriz (modelo) o desde los puntajes (cuantil 1 − P)
-  red_torch.py    perceptrón 5-10-5-1 en PyTorch con los hiperparámetros de la sección 4.3
-  validacion.py   validación cruzada estratificada o agrupada por ubicación
-  sinteticos.py   datos sintéticos con la estructura del experimento de campo
-app/app.py        app Shiny para Python
-tests/            pruebas que reproducen los números del artículo
-data/             datos locales (excluidos de git)
-```
 
-## Instalación y uso
+## 🚀 Uso rápido
+
+<details open>
+<summary><b>🐍 Python + PyTorch + Shiny</b></summary>
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
+# PyTorch SOLO para CPU (≈200 MB, sin controladores de video ni tarjeta gráfica)
+pip install torch --index-url https://download.pytorch.org/whl/cpu
 pip install -r requirements.txt
-pytest -q                      # reproduce las tablas 2, 3, 5 y 6 del artículo
-shiny run --reload app/app.py  # abre la app en http://127.0.0.1:8000
+pytest -q                       # reproduce las tablas 2, 3, 5 y 6 del artículo
+shiny run --reload app/app.py   # http://127.0.0.1:8000
 ```
+</details>
 
-## La app
+<details>
+<summary><b>📊 R + Shiny + torch (diseño bslib)</b></summary>
 
-1. **Desde la matriz de confusión**: c\*, modelo logit-binormal, tabla de los cuatro
-   umbrales y proposición 3, a partir de VP, FN, FP y VN.
-2. **Métodos numéricos**: comparación de los cinco métodos para la ecuación (3.10).
-3. **Datos y red (PyTorch)**: entrena el perceptrón con datos sintéticos o con un CSV
-   local, con validación cruzada estratificada y agrupada por ubicación, y calcula el
-   umbral empírico.
-4. **Cambio de prevalencia**: c\*(P) para varios valores de κ.
+```r
+source("app_r/instalar.R")   # una sola vez; torch se instala en versión CPU
+shiny::runApp("app_r")
+```
+</details>
 
-## Datos
+## 🗂️ Contenido
 
-Los datos de campo no son públicos. Ver `data/README.md`.
+| Ruta | Qué hace |
+| --- | --- |
+| `src/umbral/metricas.py` | Se, Sp, VPP, VPN, C<sub>J</sub>, B<sub>J</sub>, B<sub>G</sub>, F<sub>1</sub>, MCC y la proposición 3 |
+| `src/umbral/binormal.py` | Modelo logit-binormal reconstruido desde la matriz de confusión |
+| `src/umbral/raices.py` | Bisección, Newton–Raphson, secante, Brent e ITP |
+| `src/umbral/umbral.py` | c* desde la matriz (modelo) o desde los puntajes (cuantil 1 − P) |
+| `src/umbral/red_torch.py` | Perceptrón 5-10-5-1 en PyTorch (sección 4.3 del artículo) |
+| `src/umbral/validacion.py` | Validación cruzada estratificada y **agrupada por ubicación** |
+| `src/umbral/sinteticos.py` | Datos sintéticos con la estructura del experimento |
+| `app/app.py` | App Shiny para Python |
+| `app_r/` | App R Shiny con bslib, plotly y torch para R |
+| `tools/generar_animaciones.py` | Regenera los GIF de este README |
+
+## 🖥️ La app
+
+| Pestaña | Contenido |
+| --- | --- |
+| **1 · Desde la matriz** | c*, modelo logit-binormal, tabla de los cuatro umbrales, proposición 3 |
+| **2 · Métodos numéricos** | Comparación de los cinco métodos y su convergencia |
+| **3 · Datos y red** | Entrena la red con datos sintéticos o con tu CSV local; CV estratificada vs. agrupada |
+| **4 · Cambio de prevalencia** | c*(P) para varios valores de κ |
+
+## 🔒 Datos
+
+Los datos de campo **no se publican**: `data/` y todos los `.csv` están excluidos por
+`.gitignore`. El CSV se carga solo en la app que corre en tu computador. Ver `data/README.md`.
+
+## 👤 Autor
+
+**Jesús Enrique Flores Riera** · [ORCID 0000-0002-8167-4212](https://orcid.org/0000-0002-8167-4212)
+Universidad Nacional de Colombia
+
+<div align="center">
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:eb6834,50:1baf7a,100:2a78d6&height=110&section=footer" width="100%"/>
+</div>
