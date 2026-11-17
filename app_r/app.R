@@ -6,6 +6,9 @@ library(bslib)
 library(bsicons)
 library(plotly)
 library(DT)
+if (!file.exists("R/umbral.R"))
+  stop("Falta R/umbral.R junto a app.R. Copia la carpeta app_r COMPLETA (con su subcarpeta R/) ",
+       "o ejecuta shiny::runApp('ruta/a/umbral_desicion_app/app_r').", call. = FALSE)
 source("R/umbral.R", encoding = "UTF-8")
 
 # Paleta (validada para daltonismo) y superficie
