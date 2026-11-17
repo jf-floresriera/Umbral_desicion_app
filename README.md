@@ -115,7 +115,7 @@ Con `"auto"`, si no hay GPU se usa la CPU sin error.
 | `src/umbral/validacion.py` | Validación cruzada estratificada y **agrupada por ubicación** |
 | `src/umbral/sinteticos.py` | Datos sintéticos con la estructura del experimento |
 | `app/app.py` | App Shiny para Python |
-| `app_r/` | App R Shiny con bslib, plotly y torch para R |
+| `app_r/app.R` | App R Shiny en un solo archivo (bslib, plotly y torch para R) |
 | `tools/generar_animaciones.py` | Regenera los GIF de este README |
 
 ## 🖥️ La app
