@@ -57,7 +57,7 @@ flowchart LR
 ## Uso rápido
 
 <details open>
-<summary><b>🐍 Python + PyTorch + Shiny</b></summary>
+<summary><b> Python + PyTorch + Shiny</b></summary>
 
 ```bash
 sudo apt install python3-venv python3-full        # solo la primera vez (Ubuntu/Debian)
@@ -73,7 +73,7 @@ Cada vez que abras una terminal nueva, activa el entorno con `source .venv/bin/a
 </details>
 
 <details>
-<summary><b>📊 R + Shiny + torch (diseño bslib)</b></summary>
+<summary><b> R + Shiny + torch (diseño bslib)</b></summary>
 
 Desde la **terminal** (no dentro de R):
 ```bash
