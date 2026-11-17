@@ -30,14 +30,34 @@ es el punto donde se cruzan el índice de Youden **clásico** (la red como instr
 **se igualan los falsos positivos y los falsos negativos esperados**.
 
 <div align="center">
-<img src="assets/umbral_prevalencia.gif" width="85%" alt="c* se mueve con la prevalencia"/>
+<a href="assets/umbral_prevalencia.png" title="Clic para ver la imagen estática (en pausa) y descargarla">
+<picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/umbral_prevalencia.png"/>
+  <img src="assets/umbral_prevalencia.gif" width="85%" alt="c* se mueve con la prevalencia"/>
+</picture>
+</a>
+<br>
+<a href="assets/umbral_prevalencia.png"><img src="https://img.shields.io/badge/%E2%8F%B8_Ver_est%C3%A1tica-clic-52514e?style=flat-square"/></a>
+<a href="https://github.com/jf-floresriera/Umbral_desicion_app/raw/main/assets/umbral_prevalencia.png"><img src="https://img.shields.io/badge/%E2%AC%87_PNG-alta_resoluci%C3%B3n-2a78d6?style=flat-square"/></a>
+<a href="https://github.com/jf-floresriera/Umbral_desicion_app/raw/main/assets/umbral_prevalencia.svg"><img src="https://img.shields.io/badge/%E2%AC%87_SVG-vectorial-1baf7a?style=flat-square"/></a>
+<a href="https://github.com/jf-floresriera/Umbral_desicion_app/raw/main/assets/umbral_prevalencia.gif"><img src="https://img.shields.io/badge/%E2%AC%87_GIF-animado-eb6834?style=flat-square"/></a>
 <br><sub>Al cambiar la prevalencia de uso <i>P</i>, el cruce de C<sub>J</sub> y B<sub>J</sub> —y con él c*— se desplaza. La línea punteada es el umbral por defecto 0,5.</sub>
 </div>
 
 ##  Cinco métodos para resolver la ecuación del umbral
 
 <div align="center">
-<img src="assets/convergencia.gif" width="85%" alt="convergencia de los métodos"/>
+<a href="assets/convergencia.png" title="Clic para ver la imagen estática (en pausa) y descargarla">
+<picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="assets/convergencia.png"/>
+  <img src="assets/convergencia.gif" width="85%" alt="convergencia de los métodos"/>
+</picture>
+</a>
+<br>
+<a href="assets/convergencia.png"><img src="https://img.shields.io/badge/%E2%8F%B8_Ver_est%C3%A1tica-clic-52514e?style=flat-square"/></a>
+<a href="https://github.com/jf-floresriera/Umbral_desicion_app/raw/main/assets/convergencia.png"><img src="https://img.shields.io/badge/%E2%AC%87_PNG-alta_resoluci%C3%B3n-2a78d6?style=flat-square"/></a>
+<a href="https://github.com/jf-floresriera/Umbral_desicion_app/raw/main/assets/convergencia.svg"><img src="https://img.shields.io/badge/%E2%AC%87_SVG-vectorial-1baf7a?style=flat-square"/></a>
+<a href="https://github.com/jf-floresriera/Umbral_desicion_app/raw/main/assets/convergencia.gif"><img src="https://img.shields.io/badge/%E2%AC%87_GIF-animado-eb6834?style=flat-square"/></a>
 <br><sub>Error en cada evaluación: Newton–Raphson (cuadrático) y Brent (robusto) son los métodos retenidos.</sub>
 </div>
 

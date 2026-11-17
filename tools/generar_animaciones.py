@@ -27,6 +27,12 @@ plt.rcParams.update({"font.family": "DejaVu Sans", "axes.edgecolor": TXT2, "axes
 mod = ModeloBinormal.desde_conteos(9, 18, 10, 175)
 
 
+def _guardar_estatica(fig, nombre):
+    """Último cuadro como PNG de alta resolución y SVG vectorial (para descargar)."""
+    fig.savefig(SALIDA / f"{nombre}.png", dpi=220, facecolor=SUP)
+    fig.savefig(SALIDA / f"{nombre}.svg", facecolor=SUP)
+
+
 def umbral_vs_prevalencia():
     Ps = np.concatenate([np.linspace(0.03, 0.45, 36), np.linspace(0.45, 0.03, 36)])
     fig, ax = plt.subplots(figsize=(7.2, 4.0), dpi=90)
@@ -55,6 +61,10 @@ def umbral_vs_prevalencia():
 
     FuncAnimation(fig, cuadro, frames=len(Ps), blit=False).save(
         SALIDA / "umbral_prevalencia.gif", writer=PillowWriter(fps=12))
+    # versión estática (caso del artículo, P = 27/212) para ver en pausa y descargar
+    Ps[0] = 27 / 212
+    cuadro(0)
+    _guardar_estatica(fig, "umbral_prevalencia")
     plt.close(fig)
 
 
@@ -81,6 +91,8 @@ def convergencia():
         return lineas
 
     FuncAnimation(fig, cuadro, frames=frames).save(SALIDA / "convergencia.gif", writer=PillowWriter(fps=6))
+    cuadro(nmax)
+    _guardar_estatica(fig, "convergencia")
     plt.close(fig)
 
 
